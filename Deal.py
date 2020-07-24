@@ -1,5 +1,6 @@
 #Updated on 13.07 - bug with vuln in contract result calcs fixed
 #15.07 - bug with 1x-p-p-p-p fixed
+#24.07 - small slam bonus corrected from 1000 to 750
 import numpy as np
 import torch
 
@@ -17,7 +18,7 @@ CONTRACT_SCORES = [[20, 40, 60, 80, 100, 120, 140], #CLUBS
 #Contract bonuses
 PARTSCORE = 50
 GAME_BONUS = (300, 500)
-SMALL_BONUS = (500, 1000)
+SMALL_BONUS = (500, 750)
 GRAND_BONUS = (1000, 1500)
 DOUBLE_BONUS = 50
 REDOUBLE_BONUS = 100
