@@ -1,6 +1,7 @@
 #Updated on 13.07 - bug with vuln in contract result calcs fixed
 #15.07 - bug with 1x-p-p-p-p fixed
 #24.07 - small slam bonus corrected from 1000 to 750
+#26.07 - fixing declarer from last one to first one
 import numpy as np
 import torch
 
@@ -359,6 +360,17 @@ class Deal:
         self.add_bid(bid, masked_probs[bid])
         return
     
+    def correct_declarer(self):
+        """Corrects declarer to one who first bid suit"""
+        suit = self.lastbid % 5
+        side = self.declarer % 2 #NS or EW
+#         print('zzz')
+#         print(self.bidding[side::2])
+        for idx, bid in enumerate(self.bidding[side::2]): #checking bids for 1 side
+            if bid % 5 == suit:
+#                 print(side, suit, idx, self.declarer)
+                return side + (idx % 2)*2
+    
     def calc_deal_result(self): #, contract, doubled, vuln, dealer, res_array):
         """Calculate score for contract (by number 0-34) based on res_array. 
         Doubled could be 0 (No), 1 (doubled), 2(redoubled).
@@ -375,7 +387,7 @@ class Deal:
         else:
             doubled = 0
         vuln = self.get_vuln_for_declarer()
-        dealer = self.declarer
+        dealer = self.correct_declarer()
         res_array = self.res_table
         
         cont_tricks = int(np.ceil(contract / 5.0 + 6.1)) #6 tricks to base number, 0.1 - to handle clubs
